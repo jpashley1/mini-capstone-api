@@ -1,6 +1,6 @@
 class ProductsController < ApplicationController
   def index
-    render json: { message: "hello" }
+    render json: { message: "index" }
   end
 
   def show
