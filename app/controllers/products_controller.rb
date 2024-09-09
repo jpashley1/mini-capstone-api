@@ -2,9 +2,9 @@ class ProductsController < ApplicationController
   def index
     @products = Product.all
     # render "products/index"
-    render json: @products
+    # render json: @products
     # ask why this doesn't work: render :index
-    # render :index
+    render :index
 
     # # testing route code:
     # render json: { message: "index" }
@@ -14,9 +14,10 @@ class ProductsController < ApplicationController
     # get the right id
     @product = Product.find_by(id: params[:id])
     # find the product with that id
-    # ask why this doesn't work: render :show
+    # ask why this doesn't work:
+    render :show
     # ask why the singular versus plural, is ruby just smart, or am I missing a key peice of logic regarding the convention
-    render json: @product
+    # render json: @product
     # # testing route code:
     # render json: { message: "Show" }
   end
@@ -28,13 +29,18 @@ class ProductsController < ApplicationController
       image_url: params[:image_url],
       description: params[:description],
       stock: params[:stock],
+      manufacturer_id: params[:manufacturer_id]
 
     )
-    @product.save
-    render json: @product
+    #happy sad path
+    if @product.save
+      render :show
+    else
+      #error handling
+      render json: { errors: @product.errors.full_messages}, 
+      status: :unprocessable_entity
+    end
 
-    # # testing route code:
-    # render json: { message: "create" }
   end
 
   def update
@@ -48,10 +54,12 @@ class ProductsController < ApplicationController
       price: params[:price] || @product.price,
       image_url: params[:image_url] || @product.image_url,
       description: params[:description] || @product.description,
-      stock: params[:stock],
+      stock: params[:stock] || @product.stock,
+      manufacturer_id: params[:manufacturer_id] || @product.stock,
     )
-    render json: @product
+    # render json: @product
     # # testing route code:
+    render :show
     # render json: { message: "update" }
   end
 

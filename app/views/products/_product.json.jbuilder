@@ -1,8 +1,9 @@
 json.id product.id
 json.name product.name
 json.price product.price
+json.stock product.stock
 json.image_url product.image_url
 json.description product.description
 json.created_at product.created_at
 json.updated_at product.updated_at
-json.stock product.stock
+json.manufacturer_id product.manufacturer_id
