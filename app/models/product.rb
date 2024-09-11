@@ -7,6 +7,13 @@ class Product < ApplicationRecord
   validates :price, numericality: { greater_than: 0 }
 
   # Description - length of a minimum of 1 and a maximum of 500 characters
+  belongs_to :supplier
+  has_many :images
+  # de f supplier
+  #   Supplier.find_by(id: supplier.id)
+  # end
+
+
 
 
 end

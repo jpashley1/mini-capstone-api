@@ -26,10 +26,10 @@ class ProductsController < ApplicationController
     @product = Product.new(
       name: params[:name],
       price: params[:price],
-      image_url: params[:image_url],
       description: params[:description],
       stock: params[:stock],
-      manufacturer_id: params[:manufacturer_id]
+      supplier_id: params[:supplier_id]
+      # image_url: params[:image_url],
 
     )
     #happy sad path
@@ -52,11 +52,11 @@ class ProductsController < ApplicationController
     @product.update(
       name: params[:name] || @product.name,
       price: params[:price] || @product.price,
-      image_url: params[:image_url] || @product.image_url,
       description: params[:description] || @product.description,
       stock: params[:stock] || @product.stock,
-      manufacturer_id: params[:manufacturer_id] || @product.stock,
+      supplier_id: params[:supplier_id] || @product.stock,
     )
+    @product.save
     # render json: @product
     # # testing route code:
     render :show
