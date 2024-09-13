@@ -1,54 +1,49 @@
 require "test_helper"
 
-# class ProductsControllerTest < ActionDispatch::IntegrationTest
-#   def index
-#     @products = Product.all
-#     # render "products/index"
-#     render :index
-#   end
+class ProductsControllerTest < ActionDispatch::IntegrationTest
+  test "index" do
+    get "/products.json"
+    assert_response 200
+    
+    data = JSON.parse(response.body)
+    assert_equal Product.count, data.length
+  end
+  
+  test "show" do
+    get "/products/#{Product.first.id}.json"
+    assert_response 200
+  
+    data = JSON.parse(response.body)
+    assert_equal ["id", "name", "price", "description", "created_at", "updated_at", "stock", "supplier_id", "images"], data.keys
+  end
 
-#   def create
-#     @product = Product.new(
-#       name: params[:name],
-#       price: params[:price],
-#       image_url: params[:image_url],
-#       description: params[:description],
-#     )
-#     @product.save
-#     render :show
-#   end
+  test "create" do
+    assert_difference "Product.count", 1 do
+      post "/products.json", params: { name: "lake!!", price: 800, description: "it's very nice and it is a lake i guess", stock: 3, supplier_id: 25}
+      assert_response 200
+    end
 
-#   def show
-#     # get the right id
-#     @product = Product.find_by(id: params[:id])
-#     # find the product with that id
-#     render :show
-#   end
+    assert_difference "Product.count", 0 do
+      post "/products.json", params: {}
+      assert_response 422
+    end
 
-#   def update
-#     # find the correct product
-#     @product = Product.find_by(id: params[:id])
-#     # modify attributes
-#     #
-#     # what should i do if the param is nil? I want to not update that value
-#     @product.update(
-#       name: params[:name],
-#       price: params[:price],
-#       image_url: params[:image_url],
-#       description: params[:description],
-#       name: params[:name] || @product.name,
-#       price: params[:price] || @product.price,
-#       image_url: params[:image_url] || @product.image_url,
-#       description: params[:description] || @product.description,
-#     )
-#     # save it
-#     # render
-#     render :show
-#   end
+  end
 
-#   def destroy
-#     @product = Product.find_by(id: params[:id])
-#     @product.destroy
-#     render json: { message: "product has been removed" }
-#   end
-# end
+
+  test "update" do
+    product = Product.first
+    patch "/products/#{product.id}.json", params: { name: "Updated name" }
+    assert_response 200
+
+    data = JSON.parse(response.body)
+    assert_equal "Updated name", data["name"]
+  end
+
+  test "destroy" do
+    assert_difference "Product.count", -1 do
+      delete "/products/#{Product.first.id}.json"
+      assert_response 200
+    end
+  end
+end

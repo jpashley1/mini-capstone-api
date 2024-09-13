@@ -9,11 +9,14 @@ class Product < ApplicationRecord
   # Description - length of a minimum of 1 and a maximum of 500 characters
   belongs_to :supplier
   has_many :images
+  has_many :orders
   # de f supplier
   #   Supplier.find_by(id: supplier.id)
   # end
 
-
+  def tax
+    @product.price * 0.15 #ask about this syntax
+  end
 
 
 end
