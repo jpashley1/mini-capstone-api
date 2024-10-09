@@ -10,7 +10,33 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_09_12_014144) do
+ActiveRecord::Schema[7.1].define(version: 2024_10_09_003638) do
+  create_table "carted_products", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "product_id", null: false
+    t.integer "quantity", default: 1, null: false
+    t.integer "order_id"
+    t.string "status"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["order_id"], name: "index_carted_products_on_order_id"
+    t.index ["product_id"], name: "index_carted_products_on_product_id"
+    t.index ["user_id"], name: "index_carted_products_on_user_id"
+  end
+
+  create_table "categories", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "category_products", force: :cascade do |t|
+    t.integer "category_id"
+    t.integer "product_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "images", force: :cascade do |t|
     t.string "url"
     t.integer "product_id"
@@ -55,4 +81,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_12_014144) do
     t.datetime "updated_at", null: false
   end
 
+  add_foreign_key "carted_products", "orders"
+  add_foreign_key "carted_products", "products"
+  add_foreign_key "carted_products", "users"
 end

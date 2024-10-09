@@ -1,4 +1,7 @@
 class ProductsController < ApplicationController
+  # skip_before_action :verify_authenticity_token, only: [:update]
+  # skip_before_action :protect_from_forgery
+
   def index
     @products = Product.all
     # render "products/index"
@@ -29,11 +32,18 @@ class ProductsController < ApplicationController
       description: params[:description],
       stock: params[:stock],
       supplier_id: params[:supplier_id]
-      # image_url: params[:image_url],
-
     )
+    @image = Image.new(
+      url: params[:url],
+      product_id: params[:product_id]
+    )
+    # if params[:images].present?
+    #   params[:images].each do |image_url|
+    #     @product.images.build(url: image_url)
+    #   end
+    # end
     #happy sad path
-    if @product.save
+    if @product.save!
       render :show
     else
       #error handling
@@ -56,7 +66,7 @@ class ProductsController < ApplicationController
       stock: params[:stock] || @product.stock,
       supplier_id: params[:supplier_id] || @product.stock,
     )
-    @product.save
+    @product.save!
     # render json: @product
     # # testing route code:
     render :show
